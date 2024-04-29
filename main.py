@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import tempfile
 from pytube import YouTube
+from keep_alive import keep_awake
 
 TOKEN = "6676727193:AAEe3_0acH4MgkE_qAvaaNaY2BKISGDW0ac"
 BOT_USERNAME = "@the_requestbot"
@@ -177,4 +178,5 @@ def main():
 
 
 if __name__ == "__main__":
+  keep_awake()
   main()
