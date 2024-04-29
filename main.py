@@ -19,7 +19,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 /start - Starts the bot
 /help - Shows this message
 /request [link] - sends a request to a site
-/image [link] - Downloads an image 
+/image [link] - Downloads an image
 /video [link] - Downloads a video
 /yt_video [link] - Downloads a Youtube video
 /text [link] - Downloads a text file
@@ -30,15 +30,15 @@ request = None
 async def request_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   global request
   param = update.message.text.split("/request")[-1]
-  
+
   # send a request and if that doesn't work, use a try/except to catch the error
   try:
     request = requests.get(param)
     await update.message.reply_text("Making request...")
     await update.message.reply_text(f"Request made to {param},  \n\nRequest status: {request}")
     await update.message.reply_text(f"Enter /site_content to get the site content or use /get_tag [tag_name] to get a specific tag")
-  
-  except Exception as e: 
+
+  except Exception as e:
     await update.message.reply_text(f"That didn't quite work, You got the following error: {e}")
 
 
@@ -49,8 +49,8 @@ async def get_site_content(update: Update, context: ContextTypes.DEFAULT_TYPE):
   if request is not None:
     soup = BeautifulSoup(request.content, "html.parser")
     output = soup.prettify()
-    
-    
+
+
   else:
     output = "Please make a request first, use /request [link] to do this or /help to go to help."
 
@@ -58,7 +58,7 @@ async def get_site_content(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(output)
   except Exception as e:
     await update.message.reply_text(f"There appears to be an issue. Error message: {e}\n\n i'll try to halve the output.")
-    
+
     try:
       output = output[:len(output)//2]
       await update.message.reply_text(output)
@@ -82,7 +82,7 @@ async def get_site_tags(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
   finally:
     await update.message.reply_text("That's that! use /help to see the help menu.")
-    
+
 
 async def download_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
   text = update.message.text.split("/text")[-1]
@@ -93,7 +93,7 @@ async def download_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Write some content to the temporary file
       temp_file.write(text)
       temp_file.seek(0)  # Reset the file pointer to the beginning
-    
+
       # Read and print the content of the temporary file
       await update.message.reply_document(temp_file)
   except Exception as e:
@@ -108,7 +108,7 @@ async def download_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Write some content to the temporary file
       temp_file.write(image)
       temp_file.seek(0)  # Reset the file pointer to the beginning
-    
+
       # Read and print the content of the temporary file
       await update.message.reply_photo(temp_file)
   except Exception as e:
@@ -121,10 +121,10 @@ async def download_youtube_video(update: Update, context: ContextTypes.DEFAULT_T
         yt = YouTube(video_url)
 
         await update.message.reply_text("Downloading video...")
-        
+
         # Get the highest resolution stream
         stream = yt.streams.get_highest_resolution()
-        
+
         # Download the video to a temporary file
         with tempfile.NamedTemporaryFile(mode='wb+', suffix='.mp4', delete=False) as temp_file:
             # Download the video content
@@ -132,7 +132,7 @@ async def download_youtube_video(update: Update, context: ContextTypes.DEFAULT_T
             # Write the video content to the temporary file
             temp_file.write(video_content)
             temp_file.seek(0)  # Reset the file pointer to the beginning
-            
+
             # Send the video as a reply
             await update.message.reply_video(video=temp_file)
   except Exception as e:
@@ -142,19 +142,19 @@ async def download_youtube_video(update: Update, context: ContextTypes.DEFAULT_T
 async def download_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
   video = update.message.text.split("/video")[-1]
   try:
-    text = requests.get(video).content
+    video = requests.get(video).content
     # Create a temporary file
     with tempfile.NamedTemporaryFile(mode='wb+', suffix='.mp4', delete=False) as temp_file:
     # Write some content to the temporary file
       temp_file.write(video)
       temp_file.seek(0)  # Reset the file pointer to the beginning
-    
+
       # Read and print the content of the temporary file
       await update.message.reply_video(temp_file)
   except Exception as e:
     await update.message.reply_text(f"Well that went horribly wrong., see the error message: {e}")
 
-    
+
 def main():
   print("Starting bot...")
   app = Application.builder().token(TOKEN).build()
@@ -173,7 +173,7 @@ def main():
   app.add_handler(CommandHandler("image", download_image))
 
   print("Bot active!")
-  
+
   app.run_polling()
 
 
