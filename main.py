@@ -8,6 +8,7 @@ from pytube import YouTube
 from keep_alive import keep_awake
 
 TOKEN = "6676727193:AAEe3_0acH4MgkE_qAvaaNaY2BKISGDW0ac"
+
 BOT_USERNAME = "@the_requestbot"
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -60,10 +61,14 @@ async def get_site_content(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(f"There appears to be an issue. Error message: {e}\n\n i'll try to halve the output.")
 
     try:
-      output = output[:len(output)//2]
-      await update.message.reply_text(output)
-      output = output[len(output)//2:]
-      await update.message.reply_text(output)
+      
+      group_size = 400
+      
+      for i in range(0, len(output), group_size):
+          if i + group_size < len(output):
+              await update.message.reply_text(output[i:i + group_size])
+          else:
+              await update.message.reply_text(output[i:])
     except:
       await update.message.reply_text("It appears that didn't work either, please try something else...")
 
@@ -74,9 +79,12 @@ async def get_site_tags(update: Update, context: ContextTypes.DEFAULT_TYPE):
   try:
     if request is not None:
       soup = BeautifulSoup(request.content, "html.parser")
-    tags = soup.find_all(tag)
-    for tag in tags:
-      await update.message.reply_text(tag)
+      tags = soup.find_all(tag)
+      if len(tags) > 0:
+        for tag in tags:
+          await update.message.reply_text(tag)
+      else:
+        await update.message.reply_text(f"No tags found with the tag name {tag}")
   except Exception as e:
     await update.message.reply_text(f"oops! Something went terribly wrong, maybe you entered an invalid tag? \n\n Error message: {e}")
 
