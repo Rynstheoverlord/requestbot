@@ -6,7 +6,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-  return "Hosting site for telegram bot: @benitathebot"
+  return "Hosting site for telegram bot: @the_requestbot"
 
 
 def run():
